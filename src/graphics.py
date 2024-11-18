@@ -1,9 +1,7 @@
 from plotly.graph_objects import Figure, Indicator
 import plotly.express as px
 import plotly.graph_objects as go
-import pandas as pd
 import numpy as np
-import seaborn as sns
 
 def create_gauge_chart(probability, title="Nivel de Riesgo"):
     fig = Figure()
