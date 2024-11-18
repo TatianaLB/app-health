@@ -190,7 +190,7 @@ def plot_risk_distribution(predicted_probabilities, patient_probability, title="
 
     return hist_fig
 
-def plot_age_distribution(predicted_ages, patient_age, title="Distribución de Edad"):
+def plot_age_distribution(predicted_ages, patient_age, title="Comparación de su edad con la población"):
     # Definir los rangos de edad
     rango_edades = {
         0: '0-18', 1: '18-24', 2: '25-29', 3: '30-34',

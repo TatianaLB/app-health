@@ -2,8 +2,8 @@ import pandas as pd
 
 # Función para cargar los datos
 def load_data():
-    df_diabetes = pd.read_csv('C:/Users/tatia/Documents/app-health/app-health/AppHealth/src/data/diabetes_data.csv')
-    df_hypertension = pd.read_csv('C:/Users/tatia/Documents/app-health/app-health/AppHealth/src/data/hypertension_data.csv')
+    df_diabetes = pd.read_csv('src/data/diabetes_data.csv')
+    df_hypertension = pd.read_csv('src/data/hypertension_data.csv')
 
     # Llenar valores faltantes
     df_diabetes = df_diabetes.fillna(df_diabetes.median())

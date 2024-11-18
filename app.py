@@ -120,11 +120,11 @@ app.layout = dbc.Container(
                         dcc.Checklist(
                             id='additional-graphs-checklist',
                             options=[
-                                {'label': 'Comparación del riesgo de diabetes con la población', 'value': 'risk_diabetes'},
-                                {'label': 'Comparación del riesgo de hipertensión con la población', 'value': 'risk_hypertension'},
-                                {'label': 'Comparación de BMI con la población', 'value': 'bmi_distribution'},
-                                {'label': 'Comparación de su edad con la población', 'value': 'age_distribution'},
-                                {'label': 'Comparación de su Frecuencia Cardíaca Máxima con la población', 'value': 'heart_rate_distribution'}
+                                {'label': 'Distribución del riesgo de Diabetes', 'value': 'risk_diabetes'},
+                                {'label': 'Distribución del riesgo de Hipertensión', 'value': 'risk_hypertension'},
+                                {'label': 'Distribución de BMI', 'value': 'bmi_distribution'},
+                                {'label': 'Distribución de la Edad', 'value': 'age_distribution'},
+                                {'label': 'Distribución de la Frecuencia Cardíaca Máxima', 'value': 'heart_rate_distribution'}
                             ],
                             value=[],
                             style={'marginBottom': '20px', 'display': 'inline-block', 'textAlign': 'left'}
@@ -277,17 +277,17 @@ def display_additional_graphs(n_clicks, selected_graphs, prepared_patient_diabet
         if 'risk_diabetes' in selected_graphs:
             diabetes_population_probabilities = diabetes_model.predict_proba(df_diabetes[diabetes_features_imp])[:, 1] 
             diabetes_prob = diabetes_model.predict_proba(prepared_patient_diabetes)[0][1]
-            graph = plot_risk_distribution(diabetes_population_probabilities, diabetes_prob, "Distribución de Riesgo de Diabetes")
+            graph = plot_risk_distribution(diabetes_population_probabilities, diabetes_prob, "Comparación del riesgo de diabetes con la población")
             graphs.append(dcc.Graph(figure=graph))
         
         if 'risk_hypertension' in selected_graphs:
             hypertension_population_probabilities = hypertension_model.predict_proba(df_hypertension[hypertension_features_imp])[:, 1]
             hypertension_prob = hypertension_model.predict_proba(prepared_patient_hypertension)[0][1]
-            graph = plot_risk_distribution(hypertension_population_probabilities, hypertension_prob, "Distribución de Riesgo de Hipertensión")
+            graph = plot_risk_distribution(hypertension_population_probabilities, hypertension_prob, "Comparación del riesgo de hipertensión con la población")
             graphs.append(dcc.Graph(figure=graph))
 
         if 'bmi_distribution' in selected_graphs:
-            graph = plot_histogram_with_patient(df_diabetes, prepared_patient_diabetes, 'BMI', "Distribución de BMI")
+            graph = plot_histogram_with_patient(df_diabetes, prepared_patient_diabetes, 'BMI', "Comparación de BMI con la población")
             graphs.append(dcc.Graph(figure=graph))
 
         if 'age_distribution' in selected_graphs:
@@ -295,7 +295,7 @@ def display_additional_graphs(n_clicks, selected_graphs, prepared_patient_diabet
             graphs.append(dcc.Graph(figure=graph))
 
         if 'heart_rate_distribution' in selected_graphs:
-            graph = plot_histogram_with_patient(df_hypertension, prepared_patient_hypertension, 'thalach', "Distribución de Frecuencia Cardíaca Máxima")
+            graph = plot_histogram_with_patient(df_hypertension, prepared_patient_hypertension, 'thalach', "Comparación de su Frecuencia Cardíaca Máxima con la población")
             graphs.append(dcc.Graph(figure=graph))
 
         return graphs
