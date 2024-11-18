@@ -70,12 +70,12 @@ app.layout = dbc.Container(
                         html.Label("4- Indique qué tipo de dolor de pecho ha experimentado:"),
                         dcc.RadioItems(id='chest-pain-radio', options=[
                             {'label': 'No siento dolor', 'value': 0},
-                            {'label': 'Dolor no relacionado con angina: Es un dolor que no parece estar relacionado con el corazón. Puede ser un dolor muscular o de otra naturaleza (como dolor que aumenta al tocar el área o con ciertos movimientos).', 'value': 1},
-                            {'label': 'Dolor atípico de angina: Es un dolor en el pecho que no sigue un patrón claro, no siempre ocurre con esfuerzo ni siempre se alivia con descanso.', 'value': 2},
-                            {'label': 'Dolor típico de angina: Sensación de presión en el pecho que ocurre cuando hace algún esfuerzo físico o está bajo estrés, y suele aliviarse cuando descansa.', 'value': 3}
+                            {'label': 'Dolor no relacionado con angina: Es un dolor que no parece estar relacionado con el corazón. Puede ser un dolor muscular o de otra naturaleza (como dolor que aumenta al tocar el área o con ciertos movimientos).', 'value': 3},
+                            {'label': 'Dolor atípico de angina: Es un dolor en el pecho que no sigue un patrón claro, no siempre ocurre con esfuerzo ni siempre se alivia con descanso.', 'value': 1},
+                            {'label': 'Dolor típico de angina: Sensación de presión en el pecho que ocurre cuando hace algún esfuerzo físico o está bajo estrés, y suele aliviarse cuando descansa.', 'value': 2}
                         ], value=0, style={'marginBottom': '20px'}),
                         html.Label("5- ¿Siente algun dolor u opresión en el pecho al realizar ejercicio físico?"),
-                        html.Label("(0: No siente ningún dolor u opresión durante el ejercicio / 6: Siente un dolor o una fuerte opresión que me obliga a detenerme por completo.)"),
+                        html.Label("(0: Siente un dolor o una fuerte opresión que me obliga a detenerme por completo. / 6: No siente ningún dolor u opresión durante el ejercicio)"),
                         dcc.Slider(id='pain-slider', min=0, max=6, step=0.1,
                                    marks={i: str(i) for i in range(7)}, value=3,
                                    tooltip={"placement": "bottom"}),
