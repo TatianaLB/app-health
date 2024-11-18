@@ -120,11 +120,11 @@ app.layout = dbc.Container(
                         dcc.Checklist(
                             id='additional-graphs-checklist',
                             options=[
-                                {'label': 'Distribución de Riesgo de Diabetes', 'value': 'risk_diabetes'},
-                                {'label': 'Distribución de Riesgo de Hipertensión', 'value': 'risk_hypertension'},
-                                {'label': 'Distribución de BMI', 'value': 'bmi_distribution'},
-                                {'label': 'Distribución de Edad', 'value': 'age_distribution'},
-                                {'label': 'Distribución de Frecuencia Cardíaca Máxima', 'value': 'heart_rate_distribution'}
+                                {'label': 'Comparación del riesgo de diabetes con la población', 'value': 'risk_diabetes'},
+                                {'label': 'Comparación del riesgo de hipertensión con la población', 'value': 'risk_hypertension'},
+                                {'label': 'Comparación de BMI con la población', 'value': 'bmi_distribution'},
+                                {'label': 'Comparación de su edad con la población', 'value': 'age_distribution'},
+                                {'label': 'Comparación de su Frecuencia Cardíaca Máxima con la población', 'value': 'heart_rate_distribution'}
                             ],
                             value=[],
                             style={'marginBottom': '20px', 'display': 'inline-block', 'textAlign': 'left'}
