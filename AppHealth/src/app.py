@@ -87,7 +87,7 @@ app.layout = dbc.Container(
                         )
                     ]
                 ),
-                # Gráficos
+                # Gráficos gauge
                 dbc.Col(
                     id='results-container',
                     style={

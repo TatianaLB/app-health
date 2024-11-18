@@ -195,7 +195,7 @@ def plot_risk_distribution(predicted_probabilities, patient_probability, title="
 def plot_age_distribution(predicted_ages, patient_age, title="Distribución de Edad"):
     # Definir los rangos de edad
     rango_edades = {
-        0: '18-24', 1: '18-24', 2: '25-29', 3: '30-34',
+        0: '0-18', 1: '18-24', 2: '25-29', 3: '30-34',
         4: '35-39', 5: '40-44', 6: '45-49', 7: '50-54',
         8: '55-59', 9: '60-64', 10: '65-69', 11: '70-74',
         12: '75-79', 13: '80+'
