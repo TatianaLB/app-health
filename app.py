@@ -40,12 +40,21 @@ app.layout = dbc.Container(
                     },
                     width=4,  # 4 columnas de ancho
                     children=[
-                        html.Label("1- Introduzca su edad:"),
-                        dcc.Input(id='age-input', type='number', placeholder='Edad', style={
+                        html.Label("1- Introduzca su Edad:"),
+                        dcc.Input(id='age-input', type='number', placeholder='Edad (mayor de 18 años)', style={
                             'width': '100%', 'padding': '10px', 'marginBottom': '20px', 'borderRadius': '5px'}),
                         html.Div(
                             children=[
-                                html.Label("2- Introduzca su BMI (Peso corporal [kg] / Altura^2 [m^2]):"),
+                                html.Label("2- Introduzca su BMI (Índice de Masa Corporal):"),
+                                html.Div(
+                                    children=[
+                                        html.Span("BMI = ", style={'fontWeight': 'bold', 'color': '#444'}),
+                                        html.Span("Peso corporal [kg] ", style={'fontWeight': 'bold', 'color': '#444'}),
+                                        html.Span("/ Altura", style={'fontWeight': 'bold', 'color': '#444'}),
+                                        html.Span("² [m²]", style={'fontWeight': 'bold', 'color': '#444'})
+                                    ],
+                                    style={'fontSize': '16px', 'marginBottom': '10px'}
+                                ),
                                 dcc.Input(id='bmi-input', type='number', placeholder='BMI', style={
                                     'width': '100%', 'padding': '10px', 'marginBottom': '20px', 'borderRadius': '5px'})
                             ],
@@ -53,7 +62,7 @@ app.layout = dbc.Container(
                         ),
                         html.Div(
                             children=[
-                                html.Label("3- En general, su salud es (1 Excelente, 5 Horrible):"),
+                                html.Label("3- En general, su **salud** es (1 Excelente, 5 Horrible):"),
                                 dcc.Slider(id='health-slider', min=1, max=5, step=1,
                                         marks={i: str(i) for i in range(1, 6)}, value=3,
                                         tooltip={"placement": "bottom"})
