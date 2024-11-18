@@ -30,7 +30,7 @@ app.layout = dbc.Container(
         dcc.Store(id='prepared-patient-hypertension-store'),
         html.H1(
             "Bienvenido a tu Detector de Enfermedades de Confianza",
-            style={'textAlign': 'center', 'color': '#444'}
+            style={'textAlign': 'center', 'color': '#444',"text-decoration": "underline"}
         ),
         dbc.Row(
             [
@@ -67,9 +67,9 @@ app.layout = dbc.Container(
                         html.Label("4- Indique qué tipo de dolor de pecho ha experimentado:"),
                         dcc.RadioItems(id='chest-pain-radio', options=[
                             {'label': 'No siento dolor', 'value': 0},
-                            {'label': 'Dolor no relacionado con angina: Es un dolor que no parece estar relacionado con el corazón. Puede ser un dolor muscular o de otra naturaleza (como dolor que aumenta al tocar el área o con ciertos movimientos).', 'value': 3},
+                            {'label': 'Dolor no relacionado con angina: Es un dolor que no parece estar relacionado con el corazón. Puede ser un dolor muscular o de otra naturaleza (como dolor que aumenta al tocar el área o con ciertos movimientos).', 'value': 1},
                             {'label': 'Dolor atípico de angina: Es un dolor en el pecho que no sigue un patrón claro, no siempre ocurre con esfuerzo ni siempre se alivia con descanso.', 'value': 2},
-                            {'label': 'Dolor típico de angina: Sensación de presión en el pecho que ocurre cuando hace algún esfuerzo físico o está bajo estrés, y suele aliviarse cuando descansa.', 'value': 1}
+                            {'label': 'Dolor típico de angina: Sensación de presión en el pecho que ocurre cuando hace algún esfuerzo físico o está bajo estrés, y suele aliviarse cuando descansa.', 'value': 3}
                         ], value=0, style={'marginBottom': '20px'}),
                         html.Label("5- ¿Siente algun dolor u opresión en el pecho al realizar ejercicio físico?"),
                         html.Label("(0: No siente ningún dolor u opresión durante el ejercicio / 6: Siente un dolor o una fuerte opresión que me obliga a detenerme por completo.)"),
@@ -196,32 +196,33 @@ def display_results(n_clicks, age, bmi, health, chest_pain, pain):
             # Crear gráficos de resultados principales
             gauge_diabetes = create_gauge_chart(diabetes_prob, "Nivel de Riesgo Diabetes")
             gauge_hypertension = create_gauge_chart(hypertension_prob, "Nivel de Riesgo Hipertensión")
+            
 
             # Crear gráficos de importancia de variables y heatmaps
             diabetes_importances_imp = [0.2117133332645621, 0.15305638261809465, 0.11646282783471759]
             feature_importance_diabetes = plot_feature_importance(diabetes_features_imp, diabetes_importances_imp, title="Importancia de las Variables para Diabetes")
             hypertension_importances_imp = [0.1491391772301424, 0.13647081077164086, 0.12473399197765939]
             feature_importance_hypertension = plot_feature_importance(hypertension_features_imp, hypertension_importances_imp, title="Importancia de las Variables para Hipertensión")
-            feature_importance_diabetes.update_layout(height=400, width=700)
-            feature_importance_hypertension.update_layout(height=400, width=700)
+            feature_importance_diabetes.update_layout(height=400, width=600)
+            feature_importance_hypertension.update_layout(height=400, width=600)
 
             df_diabetes, df_hypertension = load_data()
             heatmap_diabetes = plot_heatmap(df_diabetes, diabetes_features_imp, "Heatmap de Variables para Diabetes")
             heatmap_hypertension = plot_heatmap(df_hypertension, hypertension_features_imp, "Heatmap de Variables para Hipertensión")
-            heatmap_diabetes.update_layout(height=500, width=700)
-            heatmap_hypertension.update_layout(height=500, width=700)
+            heatmap_diabetes.update_layout(height=500, width=600)
+            heatmap_hypertension.update_layout(height=500, width=600)
 
             # Gráficos alineados en filas y columnas
             results_graphs = [
                 dbc.Row(
                     [
-                        dbc.Col(dcc.Graph(figure=gauge_diabetes), width=8, style={'textAlign': 'center'}),
+                        dbc.Col(dcc.Graph(figure=gauge_diabetes), width=9, style={'textAlign': 'center'}),
                     ],
                     justify='center'
                 ),
                 dbc.Row(
                     [
-                        dbc.Col(dcc.Graph(figure=gauge_hypertension), width=8, style={'textAlign': 'center'}),
+                        dbc.Col(dcc.Graph(figure=gauge_hypertension), width=9, style={'textAlign': 'center'}),
                     ],
                     justify='center'
                 )
@@ -276,9 +277,6 @@ def display_additional_graphs(n_clicks, selected_graphs, prepared_patient_diabet
         prepared_patient_diabetes = pd.DataFrame.from_dict(prepared_patient_diabetes_data)
         prepared_patient_hypertension = pd.DataFrame.from_dict(prepared_patient_hypertension_data)
 
-        print(pd.DataFrame(df_diabetes["Age"]))
-
-
         # Generar las gráficas según las opciones seleccionadas
         if 'risk_diabetes' in selected_graphs:
             diabetes_population_probabilities = diabetes_model.predict_proba(df_diabetes[diabetes_features_imp])[:, 1] 
@@ -297,7 +295,7 @@ def display_additional_graphs(n_clicks, selected_graphs, prepared_patient_diabet
             graphs.append(dcc.Graph(figure=graph))
 
         if 'age_distribution' in selected_graphs:
-            graph = plot_age_distribution(pd.DataFrame(df_diabetes["Age"]), prepared_patient_diabetes['Age'].iloc[0])
+            graph = plot_age_distribution(df_diabetes["Age"].to_numpy().astype(int), prepared_patient_diabetes['Age'].iloc[0].astype(int))
             graphs.append(dcc.Graph(figure=graph))
 
         if 'heart_rate_distribution' in selected_graphs:

@@ -148,9 +148,6 @@ def plot_histogram_with_patient(data, patient_value, feature, title):
     return hist_fig
 
 
-
-
-
 def plot_risk_distribution(predicted_probabilities, patient_probability, title="Distribución de Riesgo"):
     # Calcular el histograma manualmente para personalizar el borde
     counts, bins = np.histogram(predicted_probabilities, bins=13)
@@ -164,7 +161,7 @@ def plot_risk_distribution(predicted_probabilities, patient_probability, title="
         y=counts,
         width=(bins[1] - bins[0]),  # Ancho de cada barra
         marker=dict(
-            color='#FFB74D',  # Color naranja
+            color='#FFB74D',  # Color 
             line=dict(color='black', width=1)  # Contorno negro
         ),
         opacity=0.7,
@@ -195,75 +192,63 @@ def plot_risk_distribution(predicted_probabilities, patient_probability, title="
 
     return hist_fig
 
-
-
-def plot_age_distribution(df_diabetes, patient_age_category, title="Distribución de Edad"):
-    # Definir los rangos de edad para cada categoría
+def plot_age_distribution(predicted_ages, patient_age, title="Distribución de Edad"):
+    # Definir los rangos de edad
     rango_edades = {
-        1: '18-24',
-        2: '25-29',
-        3: '30-34',
-        4: '35-39',
-        5: '40-44',
-        6: '45-49',
-        7: '50-54',
-        8: '55-59',
-        9: '60-64',
-        10: '65-69',
-        11: '70-74',
-        12: '75-79',
-        13: '80+'
+        0: '18-24', 1: '18-24', 2: '25-29', 3: '30-34',
+        4: '35-39', 5: '40-44', 6: '45-49', 7: '50-54',
+        8: '55-59', 9: '60-64', 10: '65-69', 11: '70-74',
+        12: '75-79', 13: '80+'
     }
+    
+    # Calcular el histograma manualmente para personalizar el borde
+    counts, bins = np.histogram(predicted_ages, bins=13)
 
-    # Asignar cada edad a su categoría correspondiente (de 1 a 13)
-    bins = [18, 24, 29, 34, 39, 44, 49, 54, 59, 64, 69, 74, 79, 100]
-    age_categories = np.digitize(df_diabetes['Age'], bins)
+    # Crear la figura con barras contorneadas
+    hist_fig = go.Figure()
 
-    # Contar la cantidad de ocurrencias por cada categoría
-    counts = [np.sum(age_categories == i) for i in range(1, 14)]
-
-    # Crear la figura manualmente con barras que tengan contorno
-    age_fig = go.Figure()
-
-    # Agregar las barras del histograma con los contornos negros
-    age_fig.add_trace(go.Bar(
-        x=list(rango_edades.values()),  # Los nombres de los rangos de edad como etiquetas
+    # Agregar las barras del histograma
+    hist_fig.add_trace(go.Bar(
+        x=bins[:-1] + (bins[1] - bins[0]) / 2,  # Centrar las barras
         y=counts,
+        width=(bins[1] - bins[0]),  # Ancho de cada barra
         marker=dict(
-            color='orange',  # Color de las barras
+            color='#FFB74D',  # Color naranja
             line=dict(color='black', width=1)  # Contorno negro
         ),
-        opacity=0.6,
+        opacity=0.7,
         name="Población"
     ))
 
-    # Obtener el rango de edad correspondiente a la categoría del paciente
-    if patient_age_category in rango_edades:
-        patient_age_range = rango_edades[patient_age_category]
-    else:
-        patient_age_range = 'Desconocido'
-
-    # Agregar la línea vertical que representa la edad del paciente
-    age_fig.add_trace(go.Scatter(
-        x=[patient_age_range, patient_age_range],
-        y=[0, max(counts)],
+    # Agregar la línea que representa la edad del paciente
+    hist_fig.add_trace(go.Scatter(
+        x=[patient_age, patient_age],
+        y=[0, max(counts)],  # Usar la altura máxima calculada
         mode='lines',
-        line=dict(color='red', width=2, dash='dash'),
+        line=dict(color='red', width=3, dash='dash'),  # Línea roja discontinua
         name='Paciente'
     ))
 
     # Actualizar las etiquetas y estilo del gráfico
-    age_fig.update_layout(
+    hist_fig.update_layout(
         title=dict(text=title, font=dict(size=18), x=0.5),
-        xaxis_title="Edad (rango)",
-        yaxis_title="Frecuencia",
-        xaxis=dict(title_font=dict(size=14), tickfont=dict(size=12)),
-        yaxis=dict(title_font=dict(size=14), tickfont=dict(size=12)),
+        xaxis=dict(
+            title="Edad (rango)",
+            tickmode='array',
+            tickvals=list(range(len(rango_edades))),
+            ticktext=list(rango_edades.values()),
+            tickfont=dict(size=12),
+            title_font=dict(size=14)
+        ),
+        yaxis=dict(
+            title="Frecuencia",
+            title_font=dict(size=14),
+            tickfont=dict(size=12)
+        ),
         plot_bgcolor='white',
         bargap=0,  # Sin separación entre las barras
         legend=dict(font=dict(size=12)),
-        margin=dict(l=20, r=20, t=50, b=50)
+        margin=dict(l=20, r=20, t=50, b=50),
     )
 
-    return age_fig
-
+    return hist_fig
