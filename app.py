@@ -1,15 +1,11 @@
 # Definición de la aplicación
 
-# Definición de la aplicación
-
-# Definición de la aplicación
-
 from dash import Dash, html, dcc, Input, Output, State, ctx
 import dash_bootstrap_components as dbc
 import pandas as pd
-from model import train_models
-from etl import prepare_patient_data_with_names, categorizar_edad, load_data
-from graphics import create_gauge_chart, plot_feature_importance, plot_heatmap, plot_histogram_with_patient, plot_risk_distribution, plot_age_distribution
+from src.model import train_models
+from src.etl import prepare_patient_data_with_names, categorizar_edad, load_data
+from src.graphics import create_gauge_chart, plot_feature_importance, plot_heatmap, plot_histogram_with_patient, plot_risk_distribution, plot_age_distribution
 
 # Inicializar la aplicación Dash con el tema "BOOTSTRAP"
 app = Dash(__name__, title="AppHealth", external_stylesheets=[dbc.themes.BOOTSTRAP])

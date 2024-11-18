@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
-from etl import load_data  
+from src.etl import load_data  
 
 # Función para entrenar y evaluar un modelo con las variables más importantes
 def train_and_evaluate_model(data, target_column, important_features):
