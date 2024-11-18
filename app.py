@@ -1,5 +1,3 @@
-# Definición de la aplicación
-
 from dash import Dash, html, dcc, Input, Output, State, ctx
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -7,7 +5,7 @@ from src.model import train_models
 from src.etl import prepare_patient_data_with_names, categorizar_edad, load_data
 from src.graphics import create_gauge_chart, plot_feature_importance, plot_heatmap, plot_histogram_with_patient, plot_risk_distribution, plot_age_distribution
 
-# Inicializar la aplicación Dash con el tema "BOOTSTRAP"
+# Inicializar la aplicación Dash 
 app = Dash(__name__, title="AppHealth", external_stylesheets=[dbc.themes.BOOTSTRAP])
 # Declare server for Heroku deployment. Needed for Procfile.
 server = app.server
@@ -30,7 +28,7 @@ app.layout = dbc.Container(
         ),
         dbc.Row(
             [
-                # Formulario
+                # Formulario inicial
                 dbc.Col(
                     style={
                         'backgroundColor': '#FFAB91',
@@ -38,7 +36,7 @@ app.layout = dbc.Container(
                         'borderRadius': '10px',
                         'marginRight': '10px'
                     },
-                    width=4,  # 4 columnas de ancho
+                    width=4, 
                     children=[
                         html.Label("1- Introduzca su Edad:"),
                         dcc.Input(id='age-input', type='number', placeholder='Edad (mayor de 18 años)', style={
@@ -62,7 +60,7 @@ app.layout = dbc.Container(
                         ),
                         html.Div(
                             children=[
-                                html.Label("3- En general, su **salud** es (1 Excelente, 5 Horrible):"),
+                                html.Label("3- En general, su salud es (1 Excelente, 5 Horrible):"),
                                 dcc.Slider(id='health-slider', min=1, max=5, step=1,
                                         marks={i: str(i) for i in range(1, 6)}, value=3,
                                         tooltip={"placement": "bottom"})
@@ -106,14 +104,14 @@ app.layout = dbc.Container(
             justify='center'
         ),
         html.Hr(),
-        # Nuevo div para los gráficos de importancia de variables y heatmaps
+        # Gráficos de importancia de variables y heatmaps
         html.Div(
             id='importance-heatmap-container',
             style={'backgroundColor': '#FFFFFF', 'padding': '30px', 'borderRadius': '10px', 'marginTop': '20px', 'marginBottom': '20px', 'marginRight': '60px', 'marginLeft': '60px'},
             children=[]
         ),
         html.Hr(),
-        # Añadir el selector de gráficos adicionales dentro de una fila y columna con estilo similar al formulario
+        # Selector de gráficos adicionales 
         dbc.Row(
             [
                 dbc.Col(
@@ -149,7 +147,7 @@ app.layout = dbc.Container(
                         )
                     ]
                 ),
-                # Columna para mostrar los gráficos seleccionados
+                # Mostrar los gráficos seleccionados
                 dbc.Col(
                     id='additional-graphs-container',
                     style={
@@ -181,9 +179,8 @@ app.layout = dbc.Container(
 def display_results(n_clicks, age, bmi, health, chest_pain, pain):
     if n_clicks:
         try:
-            if age is None or bmi is None:
-                # Devolver cuatro valores, asegurando que todos los outputs se cumplen
-                return "Por favor, complete todos los campos antes de continuar.", [], None, None
+            if age is None or age <18 or bmi is None:
+                return "Por favor, complete todos los campos antes de continuar, e introduzca una edad mayor de 18.", [], None, None
 
             # Preparar los datos del paciente
             patient_diabetes = [bmi, categorizar_edad(age), health]
@@ -194,16 +191,16 @@ def display_results(n_clicks, age, bmi, health, chest_pain, pain):
             hypertension_features_imp = ['cp', 'thalach', 'oldpeak']
             prepared_patient_hypertension = prepare_patient_data_with_names(patient_hypertension, hypertension_features_imp)
 
-            # Obtener probabilidades
+            # Probabilidades
             diabetes_prob = diabetes_model.predict_proba(prepared_patient_diabetes)[0][1]
             hypertension_prob = hypertension_model.predict_proba(prepared_patient_hypertension)[0][1]
 
-            # Crear gráficos de resultados principales
+            # Gráficos gauge
             gauge_diabetes = create_gauge_chart(diabetes_prob, "Nivel de Riesgo Diabetes")
             gauge_hypertension = create_gauge_chart(hypertension_prob, "Nivel de Riesgo Hipertensión")
             
 
-            # Crear gráficos de importancia de variables y heatmaps
+            # Gráficos de importancia de variables y heatmaps
             diabetes_importances_imp = [0.2117133332645621, 0.15305638261809465, 0.11646282783471759]
             feature_importance_diabetes = plot_feature_importance(diabetes_features_imp, diabetes_importances_imp, title="Importancia de las Variables para Diabetes")
             hypertension_importances_imp = [0.1491391772301424, 0.13647081077164086, 0.12473399197765939]
@@ -253,15 +250,13 @@ def display_results(n_clicks, age, bmi, health, chest_pain, pain):
             return results_graphs, importance_heatmap_graphs, prepared_patient_diabetes.to_dict(), prepared_patient_hypertension.to_dict()
 
         except Exception as e:
-            # Devolver cuatro valores en caso de excepción
             return f"Error al procesar los datos: {str(e)}", [], None, None
 
-    # Devolver cuatro valores cuando no se ha hecho clic en el botón
     return "Introduzca los datos y haga click en Mostrar resultados.", [], None, None
 
 
 
-# Añadir callback para manejar los gráficos adicionales seleccionados
+# Callback para los gráficos adicionales 
 @app.callback(
     Output('additional-graphs-container', 'children'),
     Input('show-graphs-button', 'n_clicks'),
@@ -273,12 +268,12 @@ def display_additional_graphs(n_clicks, selected_graphs, prepared_patient_diabet
     if n_clicks:
         graphs = []
 
-        # Cargar los datos necesarios
+        # Cargar los datos
         df_diabetes, df_hypertension = load_data()
         diabetes_features_imp = ['BMI', 'Age', 'GenHlth']
         hypertension_features_imp = ['cp', 'thalach', 'oldpeak']
 
-        # Convertir los datos almacenados de vuelta a DataFrames
+        # Convertimos los datos almacenados de vuelta a DataFrames
         prepared_patient_diabetes = pd.DataFrame.from_dict(prepared_patient_diabetes_data)
         prepared_patient_hypertension = pd.DataFrame.from_dict(prepared_patient_hypertension_data)
 

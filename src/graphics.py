@@ -33,7 +33,6 @@ def create_gauge_chart(probability, title="Nivel de Riesgo"):
     return fig
 
 def plot_feature_importance(features, importances, title="Importancia de las Variables"):
-    # Ordenar las características por importancia de mayor a menor
     sorted_data = sorted(zip(importances, features), reverse=True)
     importances, features = zip(*sorted_data)
     
@@ -66,8 +65,7 @@ def plot_feature_importance(features, importances, title="Importancia de las Var
 def plot_heatmap(data, features, title="Relación entre Variables"):
     # Crear una matriz de correlación
     correlation_matrix = data[features].corr()
-    
-    # Crear el heatmap utilizando Plotly
+
     fig = go.Figure(data=go.Heatmap(
         z=correlation_matrix.values,
         x=correlation_matrix.columns,
@@ -76,7 +74,6 @@ def plot_heatmap(data, features, title="Relación entre Variables"):
         colorbar=dict(title='Correlación')
     ))
     
-    # Añadir anotaciones a la figura con los valores de la correlación
     for i in range(len(correlation_matrix)):
         for j in range(len(correlation_matrix.columns)):
             fig.add_annotation(
@@ -101,36 +98,31 @@ def plot_heatmap(data, features, title="Relación entre Variables"):
 
 
 def plot_histogram_with_patient(data, patient_value, feature, title):
-    # Calcular el histograma manualmente para personalizar el borde
     counts, bins = np.histogram(data[feature], bins=13)
-    
-    # Crear la figura manualmente con barras que tengan contorno
+
     hist_fig = go.Figure()
 
-    # Agregar las barras del histograma
     hist_fig.add_trace(go.Bar(
-        x=bins[:-1],  # Se utiliza el límite inferior de cada bin
+        x=bins[:-1],  
         y=counts,
-        width=(bins[1] - bins[0]),  # Ancho de cada barra
+        width=(bins[1] - bins[0]),  
         marker=dict(
-            color='#FFB74D',  # Color naranja
-            line=dict(color='black', width=1.5)  # Contorno negro
+            color='#FFB74D',  
+            line=dict(color='black', width=1.5) 
         ),
         opacity=0.7,
         name="Población"
     ))
 
-    # Agregar la línea que representa el valor del paciente
     patient_val = patient_value[feature].iloc[0]
     hist_fig.add_trace(go.Scatter(
         x=[patient_val, patient_val], 
-        y=[0, max(counts) * 1.1],  # Extender un poco más para que llegue al borde superior
+        y=[0, max(counts) * 1.1],  
         mode='lines',
-        line=dict(color='red', width=3, dash='dash'),  # Línea roja con estilo dash
+        line=dict(color='red', width=3, dash='dash'),  
         name='Paciente'
     ))
 
-    # Ajustar las etiquetas y el diseño del gráfico
     hist_fig.update_layout(
         title=dict(text=title, font=dict(size=18), x=0.5),
         xaxis_title=feature,
@@ -138,7 +130,7 @@ def plot_histogram_with_patient(data, patient_value, feature, title):
         xaxis=dict(title_font=dict(size=14), tickfont=dict(size=12), showgrid=False),
         yaxis=dict(title_font=dict(size=14), tickfont=dict(size=12), showgrid=False, range=[0, max(counts) * 1.2]),
         plot_bgcolor='white',
-        bargap=0,  # Sin separación entre las barras
+        bargap=0, 
         legend=dict(font=dict(size=12), x=0.85, y=0.95, bgcolor='rgba(255, 255, 255, 0.5)'),
         margin=dict(l=20, r=20, t=50, b=50)
     )
@@ -147,35 +139,30 @@ def plot_histogram_with_patient(data, patient_value, feature, title):
 
 
 def plot_risk_distribution(predicted_probabilities, patient_probability, title="Distribución de Riesgo"):
-    # Calcular el histograma manualmente para personalizar el borde
     counts, bins = np.histogram(predicted_probabilities, bins=13)
-    
-    # Crear la figura manualmente con barras que tengan contorno
+
     hist_fig = go.Figure()
 
-    # Agregar las barras del histograma
     hist_fig.add_trace(go.Bar(
-        x=bins[:-1],  # Se utiliza el límite inferior de cada bin
+        x=bins[:-1], 
         y=counts,
-        width=(bins[1] - bins[0]),  # Ancho de cada barra
+        width=(bins[1] - bins[0]),  
         marker=dict(
-            color='#FFB74D',  # Color 
-            line=dict(color='black', width=1)  # Contorno negro
+            color='#FFB74D',   
+            line=dict(color='black', width=1)  
         ),
         opacity=0.7,
         name="Población"
     ))
 
-    # Agregar la línea que representa el valor del paciente
     hist_fig.add_trace(go.Scatter(
         x=[patient_probability, patient_probability],
-        y=[0, max(counts)],  # Usar la altura máxima calculada
+        y=[0, max(counts)],  
         mode='lines',
-        line=dict(color='red', width=3, dash='dash'),  # Línea roja discontinua
+        line=dict(color='red', width=3, dash='dash'),  
         name='Paciente'
     ))
 
-    # Actualizar las etiquetas y estilo del gráfico
     hist_fig.update_layout(
         title=dict(text=title, font=dict(size=18), x=0.5),
         xaxis_title="Probabilidad de Riesgo",
@@ -183,7 +170,7 @@ def plot_risk_distribution(predicted_probabilities, patient_probability, title="
         xaxis=dict(title_font=dict(size=14), tickfont=dict(size=12), showgrid=False),
         yaxis=dict(title_font=dict(size=14), tickfont=dict(size=12), showgrid=False),
         plot_bgcolor='white',
-        bargap=0,  # Sin separación entre las barras
+        bargap=0,  
         legend=dict(font=dict(size=12)),
         margin=dict(l=20, r=20, t=50, b=50),
     )
@@ -198,36 +185,31 @@ def plot_age_distribution(predicted_ages, patient_age, title="Comparación de su
         8: '55-59', 9: '60-64', 10: '65-69', 11: '70-74',
         12: '75-79', 13: '80+'
     }
-    
-    # Calcular el histograma manualmente para personalizar el borde
+
     counts, bins = np.histogram(predicted_ages, bins=13)
 
-    # Crear la figura con barras contorneadas
     hist_fig = go.Figure()
 
-    # Agregar las barras del histograma
     hist_fig.add_trace(go.Bar(
-        x=bins[:-1] + (bins[1] - bins[0]) / 2,  # Centrar las barras
+        x=bins[:-1] + (bins[1] - bins[0]) / 2,  
         y=counts,
-        width=(bins[1] - bins[0]),  # Ancho de cada barra
+        width=(bins[1] - bins[0]),  
         marker=dict(
-            color='#FFB74D',  # Color naranja
-            line=dict(color='black', width=1)  # Contorno negro
+            color='#FFB74D',  
+            line=dict(color='black', width=1) 
         ),
         opacity=0.7,
         name="Población"
     ))
 
-    # Agregar la línea que representa la edad del paciente
     hist_fig.add_trace(go.Scatter(
         x=[patient_age, patient_age],
-        y=[0, max(counts)],  # Usar la altura máxima calculada
+        y=[0, max(counts)],  
         mode='lines',
-        line=dict(color='red', width=3, dash='dash'),  # Línea roja discontinua
+        line=dict(color='red', width=3, dash='dash'), 
         name='Paciente'
     ))
 
-    # Actualizar las etiquetas y estilo del gráfico
     hist_fig.update_layout(
         title=dict(text=title, font=dict(size=18), x=0.5),
         xaxis=dict(
@@ -244,7 +226,7 @@ def plot_age_distribution(predicted_ages, patient_age, title="Comparación de su
             tickfont=dict(size=12)
         ),
         plot_bgcolor='white',
-        bargap=0,  # Sin separación entre las barras
+        bargap=0,  
         legend=dict(font=dict(size=12)),
         margin=dict(l=20, r=20, t=50, b=50),
     )
